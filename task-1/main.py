@@ -25,6 +25,6 @@ def job():
 
 if __name__ == "__main__":
     scheduler = BlockingScheduler()
-    scheduler.add_job(job, "cron", hour=10, minute=22)
+    scheduler.add_job(job, "cron", hour=2, minute=0)
     print("Scheduler started. Waiting for 2:00 AM...")
     scheduler.start()
