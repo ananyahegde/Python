@@ -35,3 +35,10 @@ class IntegerField(Field):
         if not isinstance(value, int):
             raise TypeError(f"{self.name} must be an int")
         super().__set__(instance, value)
+
+class EmailField(CharField):
+    def __set__(self, instance, value):
+        import re
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError(f"{self.name} must be a valid email")
+        super().__set__(instance, value)
