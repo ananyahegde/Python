@@ -5,3 +5,5 @@ apscheduler==3.11.2
 tqdm==4.67.3
 fake-useragent==2.2.0
 rich==14.3.3
+websockets==16.0 
+aiosqlite==0.22.1
