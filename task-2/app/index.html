@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ChatRoom</title>
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div id="login-screen">
+  <h1>// CHATROOM //</h1>
+  <input id="username-input" type="text" placeholder="enter username..." maxlength="20"
+    onkeydown="if(event.key==='Enter') connect()" />
+  <button onclick="connect()">[ CONNECT ]</button>
+</div>
+
+<div id="app">
+  <div id="sidebar">
+
+    <div class="sidebar-label">SEARCH ROOMS</div>
+    <input id="search-input" type="text" placeholder="search or create..."
+      oninput="searchRooms(this.value)" />
+    <div id="search-results"></div>
+
+    <div class="sidebar-label">MY ROOMS</div>
+    <div id="my-rooms"></div>
+
+    <div class="sidebar-label">ONLINE HERE</div>
+    <div id="online-list"></div>
+
+    <div class="sidebar-label">DIRECT MESSAGES</div>
+    <div id="my-dms"></div>
+    <button id="dm-btn" onclick="openDM()">[ + NEW DM ]</button>
+
+  </div>
+
+  <div id="main">
+    <div id="room-header">
+      <span id="room-title">// no room //</span>
+      <span id="member-count"></span>
+    </div>
+    <div id="messages"></div>
+    <div id="typing-indicator"></div>
+    <div id="input-area">
+      <input id="msg-input" type="text" placeholder="type a message..."
+        onkeydown="handleKey(event)" oninput="sendTyping()" />
+      <button id="send-btn" onclick="sendMessage()">[ SEND ]</button>
+    </div>
+  </div>
+</div>
+
+<div id="overlay" onclick="closeDM()"></div>
+<div id="dm-modal">
+  <h3>[ DIRECT MESSAGE ]</h3>
+  <input id="dm-to" type="text" placeholder="to: username..." />
+  <input id="dm-text" type="text" placeholder="message..."
+    onkeydown="if(event.key==='Enter') sendDM()" />
+  <div>
+    <button onclick="sendDM()">[ SEND ]</button>
+    <button onclick="closeDM()">[ CANCEL ]</button>
+  </div>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
