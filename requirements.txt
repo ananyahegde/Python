@@ -3,3 +3,5 @@ beautifulsoup4==4.14.3
 pandas==3.0.2
 apscheduler==3.11.2
 tqdm==4.67.3
+fake-useragent==2.2.0
+rich==14.3.3
