@@ -76,11 +76,11 @@ async def save_message(sender, text, room=None, recipient=None):
 async def get_room_history(room, limit=50):
     async with aiosqlite.connect(DB_NAME) as db:
         async with db.execute(
-            "SELECT sender, text, timestamp FROM messages WHERE room = ? ORDER BY timestamp DESC LIMIT ?",
+            "SELECT sender, text, timestamp FROM messages WHERE room = ? ORDER BY timestamp LIMIT ?",
             (room, limit)
         ) as cursor:
             rows = await cursor.fetchall()
-        return [{"sender": r[0], "text": r[1], "timestamp": r[2]} for r in reversed(rows)]
+        return [{"sender": r[0], "text": r[1], "timestamp": r[2]} for r in rows]
 
 async def get_dm_history(user1, user2, limit=50):
     async with aiosqlite.connect(DB_NAME) as db:
