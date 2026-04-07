@@ -3,7 +3,7 @@ from datetime import datetime
 from scraper import scrape_all
 from book_parser import parse
 from database import is_books_empty, has_todays_prices, insert_books, insert_prices, create_tables
-from reporter import export_csv
+from reporter import export_report
 
 def job():
     print(f"\n[{datetime.now()}] Starting nightly scrape...")
@@ -20,11 +20,11 @@ def job():
     else:
         print("Today's prices already exist, skipping...")
 
-    export_csv()
+    export_report()
     print(f"[{datetime.now()}] Done.")
 
 if __name__ == "__main__":
     scheduler = BlockingScheduler()
-    scheduler.add_job(job, "cron", hour=18, minute=47)
+    scheduler.add_job(job, "cron", hour=10, minute=22)
     print("Scheduler started. Waiting for 2:00 AM...")
     scheduler.start()
