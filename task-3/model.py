@@ -1,4 +1,5 @@
 from field import Field, CharField
+from db import execute
 
 class ModelMeta(type):
     def __new__(cls, name, bases, attrs):
@@ -20,9 +21,13 @@ class Model(metaclass=ModelMeta):
         columns = ', '.join(self._fields.keys())
         placeholders = ', '.join(['?' for _ in self._fields])
         values = [getattr(self, col, None) for col in self._fields]
+        
+        # print sql equivalent statement
         sql = f"INSERT INTO {self._table} ({columns}) VALUES ({placeholders})"
         print(f"SQL: {sql}")
         print(f"VALUES: {values}")
+        
+        execute(sql, values)
 
     @classmethod
     def create_table(cls):
@@ -33,4 +38,8 @@ class Model(metaclass=ModelMeta):
             nullable = "" if getattr(field, 'nullable', False) else " NOT NULL"
             columns.append(f"{name} {col_type}{nullable}")
         sql = f"CREATE TABLE IF NOT EXISTS {cls._table} ({', '.join(columns)})"
+        
+        # print sql equivalent statement
         print(f"SQL: {sql}")
+
+        execute(sql)
