@@ -3,6 +3,9 @@ import asyncio
 import random
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+from fake_useragent import UserAgent
+
+ua = UserAgent()
 
 BASE_URL = "http://books.toscrape.com/catalogue/"
 TOTAL_PAGES = 50
@@ -14,9 +17,10 @@ def get_all_urls():
 async def fetch(client, url, pbar):
     for attempt in range(1, MAX_RETRIES + 1):
         try:
+            headers = {"User-Agent": ua.random}
             delay = random.uniform(0.5, 1.5)
             await asyncio.sleep(delay)
-            r = await client.get(url)
+            r = await client.get(url, headers=headers)
             r.raise_for_status()
             pbar.update(1)
             pbar.refresh()
