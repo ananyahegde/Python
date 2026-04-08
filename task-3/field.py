@@ -1,3 +1,6 @@
+import re
+from db import execute_query
+
 class Field:
     def __set_name__(self, owner, name):
         self.name = name
@@ -13,8 +16,9 @@ class Field:
 
 
 class CharField(Field):
-    def __init__(self, max_length=255):
+    def __init__(self, max_length=255, unique=False):
         self.max_length = max_length
+        self.unique = unique
 
     def __set__(self, instance, value):
         if not isinstance(value, str):
@@ -38,7 +42,15 @@ class IntegerField(Field):
 
 class EmailField(CharField):
     def __set__(self, instance, value):
-        import re
+        if getattr(instance, 'id', None):
+            super().__set__(instance, value)
+            return
+        
         if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
             raise ValueError(f"{self.name} must be a valid email")
+
+        existing = execute_query(f"SELECT id FROM {self.owner._table} WHERE email=?", [value]).fetchone()
+        if existing:
+            raise ValueError(f"{value} already exists")
+
         super().__set__(instance, value)

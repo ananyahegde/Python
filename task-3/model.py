@@ -1,5 +1,5 @@
 from field import Field, CharField
-from db import execute
+from db import execute_query
 
 class ModelMeta(type):
     def __new__(cls, name, bases, attrs):
@@ -31,41 +31,50 @@ class Model(metaclass=ModelMeta):
             col_type = "VARCHAR" if isinstance(field, CharField) else "INTEGER"
             nullable = "" if getattr(field, 'nullable', False) else " NOT NULL"
             columns.append(f"{name} {col_type}{nullable}")
-
-        # print sql equivalent statement
+        
         sql = f"CREATE TABLE IF NOT EXISTS {cls._table} ({', '.join(columns)})"
-        print(f"SQL: {sql}")
-
-        execute(sql)
+        execute_query(sql)
 
     @classmethod
     def read_all(cls):
         sql = f"SELECT * FROM {cls._table}"
-        cursor = execute(sql)
+        cursor = execute_query(sql)
         rows = cursor.fetchall()
 
         results = []
         for row in rows:
             data = dict(row)
-            obj = cls(**{k: v for k, v in data.items() if k != 'id'})
+
+            obj = cls.__new__(cls)
+            obj.id = data['id']
+            for k, v in data.items():
+                if k != 'id':
+                    setattr(obj, k, v)
+
             results.append(obj)
         return results
-    
+
     @classmethod
-    def read_one(cls, **kwargs):
+    def read(cls, **kwargs):
         conditions = " AND ".join([f"{k}=?" for k in kwargs])
         sql = f"SELECT * FROM {cls._table} WHERE {conditions}"
-        
-        cursor = execute(sql, list(kwargs.values()))
-        row = cursor.fetchone()
 
-        if not row:
-            return None
+        cursor = execute_query(sql, list(kwargs.values()))
+        rows = cursor.fetchall()
 
-        data = dict(row)
-        obj = cls(**{k: v for k, v in data.items() if k != 'id'})
-        
-        return obj
+        results = []
+        for row in rows:
+            data = dict(row)
+
+            obj = cls.__new__(cls)
+            obj.id = data['id']
+            for k, v in data.items():
+                if k != 'id':
+                    setattr(obj, k, v)
+
+            results.append(obj)
+
+        return results
 
 
     def save(self):
@@ -77,11 +86,8 @@ class Model(metaclass=ModelMeta):
             placeholders = ', '.join(['?' for _ in self._fields])
             values = [getattr(self, col, None) for col in self._fields]
 
-            # print sql equivalent statement
             sql = f"INSERT INTO {self._table} ({columns}) VALUES ({placeholders})"
-            print(f"SQL: {sql}")
-
-            cursor = execute(sql, values)
+            cursor = execute_query(sql, values)
             self.id = cursor.lastrowid
 
     def update(self, **kwargs):
@@ -94,15 +100,12 @@ class Model(metaclass=ModelMeta):
         values = list(kwargs.values()) + [self.id]
 
         sql = f"UPDATE {self._table} SET {', '.join([f"{key}=?" for key in kwargs])} WHERE id=?"
-        print(sql)
-        
-        execute(sql, values)
-    
+        execute_query(sql, values)
+
     def delete(self):
         if not getattr(self, 'id', None):
             return
-        
+
         sql = f"DELETE FROM {self._table} WHERE id=?"
-        print(sql)
-        execute(sql, [self.id])
+        execute_query(sql, [self.id])
 
