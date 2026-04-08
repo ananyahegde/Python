@@ -6,7 +6,7 @@ connection.row_factory = sqlite3.Row
 def get_connection():
     return connection
 
-def execute_query(sql, values=None):
+def execute_query(sql, values=None, silent=False):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(sql, values or [])
@@ -16,8 +16,10 @@ def execute_query(sql, values=None):
         display = sql
         for v in values:
             display = display.replace('?', repr(v), 1)
-        print(f"SQL: {display}")
+        if not silent:
+            print(f"SQL: {display}")
     else:
-        print(f"SQL: {sql}")
+        if not silent:
+            print(f"SQL: {sql}")
 
     return cursor
