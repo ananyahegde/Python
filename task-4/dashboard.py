@@ -17,3 +17,6 @@ for key in keys:
     ])
 
 print(tabulate(rows, headers=["task_id", "status", "duration", "remark", "timestamp"], tablefmt="grid"))
+
+total_time = r.get("global_duration")
+print(f"Total duration: {float(total_time)}s")

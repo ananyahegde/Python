@@ -16,10 +16,12 @@ tasks = [
 ]
 
 print("[PRODUCER] Queueing tasks...")
+start_time = time.time()
+r.set("global_start_time", start_time)
 
 for task in tasks:
-    time.sleep(random.randint(0, 6))
-    
+    time.sleep(random.randint(0, 3))
+
     task_id = str(uuid.uuid4())[:8]
     task["id"] = task_id
 
