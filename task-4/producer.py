@@ -7,12 +7,12 @@ import uuid
 r = redis.Redis(decode_responses=True)
 
 tasks = [
-    {"func": "send_welcome_email", "args": ["We are thrilled to inform you that you won 1 million lottery!"]},
-    {"func": "resize_product_image", "args": [42, 999, 999]},
-    {"func": "process_payment", "args": [100000, "credit card"]},
-    {"func": "backup_database", "args": []},
-    {"func": "send_slack_notification", "args": ["Tee-Hee!"]},
-    {"func": "sync_to_crm", "args": [999]},
+    {"func": "send_welcome_email", "args": ["We are thrilled to inform you that you won 1 million lottery!"], "retries": 0},
+    {"func": "resize_product_image", "args": [42, 999, 999], "retries": 0},
+    {"func": "process_payment", "args": [100000, "credit card"], "retries": 0},
+    {"func": "backup_database", "args": [], "retries": 0},
+    {"func": "send_slack_notification", "args": ["Tee-Hee!"], "retries": 0},
+    {"func": "sync_to_crm", "args": [999], "retries": 0},
 ]
 
 print("[PRODUCER] Queueing tasks...")

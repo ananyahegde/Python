@@ -14,6 +14,7 @@ from tasks import (
 
 r = redis.Redis(decode_responses=True)
 
+MAX_RETRIES = 2
 map_tasks = {
     "send_welcome_email": send_welcome_email,
     "resize_product_image": resize_product_image,
@@ -43,21 +44,21 @@ def worker(num):
         try:
             res = func(*args)
             duration = time.time() - start_time
-            r.hset(f"task:{task['id']}", mapping={"name": func_name, "status": "SUCCESS", "duration": duration, "remark": str(res), "timestamp": str(datetime.datetime.now())})
-            print(f"[WORKER {num}] Task {task_id} completed in {duration:.2f}s")
+            r.hset(f"task:{task['id']}", mapping={"name": func_name, "status": "success", "duration": duration, "retries": task['retries'], "remark": str(res), "timestamp": str(datetime.datetime.now())})
+            print(f"[worker {num}] task {task_id} completed in {duration:.2f}s")
 
         except Exception as e:
-            duration = time.time() - start_time
-            r.hset(f"task:{task['id']}", mapping={"name": func_name, "status": "FAILED", "duration": duration, "remark": str(e), "timestamp": str(datetime.datetime.now())})
-            print(f"[WORKER {num}] Task {task_id} FAILED ({str(e)[:30]})")
+            if task['retries'] < MAX_RETRIES:
+                time.sleep(2**task['retries'])
+                t = {"id": task['id'], "func": task['func'], "args": task["args"], "retries": task['retries']+1}
+                r.lpush("task_queue", json.dumps(t))
+            else:
+                duration = time.time() - start_time
+                r.lpush("dead_queue", json.dumps(task))
+                r.hset(f"task:{task['id']}", mapping={"name": func_name, "status": "failed", "duration": duration, "retries": task['retries'], "remark": str(e), "timestamp": str(datetime.datetime.now())})
+                print(f"[worker {num}] task {task_id} failed ({str(e)[:30]})")
 
-        keys = r.keys("task:*")
-
-        if len(keys) == 6:
-            total_time = time.time() - float(r.get("global_start_time"))
-            r.set("global_duration", total_time)
-
-        print()
+            print()
 
 if __name__ == "__main__":
     for i in range(4):
