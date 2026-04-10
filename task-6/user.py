@@ -11,11 +11,11 @@ class User(BaseModel):
     email: str
     age: int
 
-@app.get("/api/users", status_code=status.HTTP_403_FORBIDDEN)
+@app.get("/users", status_code=status.HTTP_403_FORBIDDEN)
 def get_users():
     return {"message": "Access Forbidden"}
 
-@app.get("/api/users/{user_id}", status_code=status.HTTP_200_OK)
+@app.get("/users/{user_id}", status_code=status.HTTP_200_OK)
 def get_user(user_id: int):
     user_data = r.get(f"user:{user_id}")
     
@@ -27,3 +27,7 @@ def get_user(user_id: int):
     
     user_dict = json.loads(user_data)
     return User(**user_dict)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
