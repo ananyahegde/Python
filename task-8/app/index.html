@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Monitor Dashboard</h1>
+        <div class="connection">
+            <span class="dot" id="dot"></span>
+            <span id="conn-status">Connecting...</span>
+        </div>
+    </header>
+
+    <main class="grid">
+
+        <!-- Row 1: Data Table -->
+        <section class="card full">
+            <h2>Raw Readings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Sensor</th>
+                        <th>Temp (°C)</th>
+                        <th>Vibration (g)</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table"></tbody>
+            </table>
+        </section>
+
+        <!-- Row 2: Stat Cards + Alert Log -->
+        <section class="card" id="stat-cards">
+            <h2>Stats</h2>
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="stat-label">T1 — Average Temperature</span>
+                    <span class="stat-value" id="T1-avg-temp">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T1 — Average Vibration</span>
+                    <span class="stat-value" id="T1-avg-vibration">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T1 — Anomaly Score (Temp)</span>
+                    <span class="stat-value" id="T1-z-temp">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T1 — Anomaly Score (Vibration)</span>
+                    <span class="stat-value" id="T1-z-vibration">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T2 — Average Temperature</span>
+                    <span class="stat-value" id="T2-avg-temp">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T2 — Average Vibration</span>
+                    <span class="stat-value" id="T2-avg-vibration">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T2 — Anomaly Score (Temp)</span>
+                    <span class="stat-value" id="T2-z-temp">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">T2 — Anomaly Score (Vibration)</span>
+                    <span class="stat-value" id="T2-z-vibration">—</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" id="alert-log">
+            <h2>Alert Log</h2>
+            <div id="alerts">
+                <p class="no-alerts">No alerts yet.</p>
+            </div>
+        </section>
+
+        <!-- Row 3 & 4: Charts -->
+        <section class="card chart-card">
+            <h2>T1 — Temperature (°C)</h2>
+            <canvas id="chart-T1-temp"></canvas>
+        </section>
+
+        <section class="card chart-card">
+            <h2>T1 — Vibration (g)</h2>
+            <canvas id="chart-T1-vibration"></canvas>
+        </section>
+
+        <section class="card chart-card">
+            <h2>T2 — Temperature (°C)</h2>
+            <canvas id="chart-T2-temp"></canvas>
+        </section>
+
+        <section class="card chart-card">
+            <h2>T2 — Vibration (g)</h2>
+            <canvas id="chart-T2-vibration"></canvas>
+        </section>
+
+    </main>
+    <script src="/static/app.js"></script>
+</body>
+</html>

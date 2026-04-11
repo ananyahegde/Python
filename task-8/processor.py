@@ -27,6 +27,9 @@ def process(reading):
     stdev_temp = statistics.stdev(w["temp"])
     stdev_vibration = statistics.stdev(w["vibration"])
 
+    if stdev_temp == 0 or stdev_vibration == 0:
+        return None
+
     z_score_temp = (reading["temperature"] - moving_avg_temp) / stdev_temp
     z_score_vibration = (reading["vibration"] - moving_avg_vibration) / stdev_vibration
 
