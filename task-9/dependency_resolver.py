@@ -1,3 +1,5 @@
+from plugin_base import PluginBase
+
 def resolve(plugins: list[PluginBase]) -> list[PluginBase]:
     """
     Takes a list of plugin objects and returns them in activation order.
