@@ -5,8 +5,10 @@ class MarkdownParser(PluginBase):
     version = "2.1.0"
     dependencies = []
 
-    def activate(self):
-        print(f"[{self.name}] activated — registered .md -> HTML converter")
+    @classmethod
+    def activate(cls):
+        print(f"[{cls.name}] activated — registered .md -> HTML converter")
 
-    def deactivate(self):
-        print(f"[{self.name}] deactivated")
+    @classmethod
+    def deactivate(cls):
+        print(f"[{cls.name}] deactivated")

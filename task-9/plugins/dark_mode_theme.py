@@ -5,8 +5,10 @@ class DarkModeTheme(PluginBase):
     version = "1.3.2"
     dependencies = []
 
-    def activate(self):
-        print(f"[{self.name}] activated — registered theme 'dark-mode'")
+    @classmethod
+    def activate(cls):
+        print(f"[{cls.name}] activated — registered theme 'dark-mode'")
 
-    def deactivate(self):
-        print(f"[{self.name}] deactivated")
+    @classmethod
+    def deactivate(cls):
+        print(f"[{cls.name}] deactivated")

@@ -5,9 +5,11 @@ class RssFeed(PluginBase):
     version = "1.0.0"
     dependencies = ["markdown-parser"]
 
-    def activate(self):
-        print(f"[{self.name}] activated — registered command 'generate-rss'")
+    @classmethod
+    def activate(cls):
+        print(f"[{cls.name}] activated — registered command 'generate-rss'")
 
-    def deactivate(self):
-        print(f"[{self.name}] deactivated")
+    @classmethod
+    def deactivate(cls):
+        print(f"[{cls.name}] deactivated")
 

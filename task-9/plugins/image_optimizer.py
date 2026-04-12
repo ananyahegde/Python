@@ -5,8 +5,10 @@ class ImageOptimizer(PluginBase):
     version = "0.9.1"
     dependencies = []
 
-    def activate(self):
-        print(f"[{self.name}] activated — registered post-processor for .png/.jpg")
+    @classmethod
+    def activate(cls):
+        print(f"[{cls.name}] activated — registered post-processor for .png/.jpg")
 
-    def deactivate(self):
-        print(f"[{self.name}] deactivated")
+    @classmethod
+    def deactivate(cls):
+        print(f"[{cls.name}] deactivated")
