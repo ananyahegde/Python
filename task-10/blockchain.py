@@ -17,7 +17,7 @@ class Blockchain:
         """Creates the first block in the chain with hardcoded values."""
         genesis = Block(
             index=0,
-            timestamp=time.time(),
+            timestamp=1231006505,
             transactions=[],
             prev_hash="0" * 64
         )
