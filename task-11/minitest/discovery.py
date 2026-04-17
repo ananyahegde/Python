@@ -14,6 +14,15 @@ class TestInfo:
     def full_name(self) -> str:
         return f"{self.module}.{self.name}"
 
+    def is_parametrized(self) -> bool:
+        return hasattr(self.func, '__parametrize_keys__')
+
+    def get_parameter_sets(self):
+        keys = self.func.__parametrize_keys__
+        values = self.func.__parametrize_values__
+        return [dict(zip(keys, v)) for v in values]
+
+
 def discover_tests(directory: str) -> List[TestInfo]:
     tests = []
     
