@@ -57,11 +57,46 @@ class Node:
             conn.close()
 
     def _process_message(self, message: dict):
-        """Routes incoming messages to the correct handler."""
         if message['type'] == 'block':
             self._receive_block(message['data'])
         elif message['type'] == 'transaction':
             self._receive_transaction(message['data'])
+        elif message['type'] == 'get_peers':
+            self._send_peer_list(message['return_port'])
+        elif message['type'] == 'peer_list':
+            self._add_new_peers(message['data'])
+
+    def _send_peer_list(self, return_port: int):
+        peer_data = [{'host': h, 'port': p} for h, p in self.peers]
+        message = {
+            'type': 'peer_list',
+            'data': peer_data
+        }
+        self._send_to_peer('localhost', return_port, message)
+
+    def _add_new_peers(self, peer_list: list):
+        for peer in peer_list:
+            host, port = peer['host'], peer['port']
+            if (host, port) not in self.peers and port != self.port:
+                self.peers.append((host, port))
+                print(f"[NODE-{self.port}] Discovered new peer {port}")
+
+    def discover_peers(self):
+        message = {
+            'type': 'get_peers',
+            'return_port': self.port
+        }
+        self._broadcast(message)
+
+    def _send_to_peer(self, host: str, port: int, message: dict):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((host, port))
+            s.sendall(json.dumps(message).encode())
+            s.close()
+            return True
+        except:
+            return False
 
     def connect_to_peer(self, host: str, port: int):
         """Registers a peer node to broadcast to."""
@@ -124,24 +159,25 @@ class Node:
             prev_hash=last_block.hash
         )
 
-        print(f"[NODE-{self.port}] Mining block #{block.index} ({len(transactions)} transactions)...")
+        print(f"[NODE-{self.port}] Mining block #{block.index} ({len(transactions)} transactions in mempool)...")
         print(f"Difficulty: {self.DIFFICULTY} (hash must start with '{'0' * self.DIFFICULTY}')")
 
         start = time.time()
+        attempts = 0
         while not block.hash.startswith("0" * self.DIFFICULTY):
             block.nonce += 1
             block.hash = block.compute_hash()
+            attempts += 1
 
-        elapsed = time.time() - start
-        print(f"[NODE-{self.port}] Block #{block.index} mined in {elapsed:.2f}s")
-        print(f"Hash: {block.hash}")
-        print(f"Nonce: {block.nonce}")
+            if attempts % 10000 == 0:
+                print(f"Nonce: {block.nonce} -> hash: {block.hash[:8]}... MISS")
+                attempts = 0
+
+        print(f"Nonce: {block.nonce} -> hash: {block.hash[:8]}... FOUND!")
 
         self.blockchain.chain.append(block)
-
         for tx in transactions:
             self.mempool.remove(tx)
-
         self._broadcast_block(block)
 
     def _broadcast_block(self, block: Block):
