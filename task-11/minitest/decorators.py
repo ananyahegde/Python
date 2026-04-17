@@ -18,6 +18,7 @@ def skip(reason="skipped"):
         def wrapper(*args, **kwargs):
             raise SkipTest(reason)
         wrapper.__skip_reason__ = reason
+        wrapper.__skipped__ = True
         return wrapper
     return decorator
 
