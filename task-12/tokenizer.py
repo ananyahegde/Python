@@ -152,9 +152,12 @@ class Tokenizer:
         start = self.pos
         if self.text[self.pos] == '-':
             self.pos += 1
+
         while self.pos < len(self.text) and self.text[self.pos].isdigit():
             self.pos += 1
-        if self.pos < len(self.text) and self.text[self.pos] == '.':
+
+        if (self.pos < len(self.text) and self.text[self.pos] == '.'
+                and self._peek() != '.'):
             self.pos += 1
             while self.pos < len(self.text) and self.text[self.pos].isdigit():
                 self.pos += 1
