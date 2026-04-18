@@ -20,5 +20,5 @@ EMAIL_RECIPIENTS = [
 ]
 EMAIL_FROM = "reports@company.com"
 
-TEMPLATE_NAME = "sales_monthly"
+TEMPLATE_NAME = "report"
 REGIONS = ["North", "South", "East", "West"]

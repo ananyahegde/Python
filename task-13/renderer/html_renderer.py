@@ -74,7 +74,7 @@ def render_report(
     generated_at = datetime.now().strftime("%d %b %Y, %H:%M")
 
     # Jinja2 environment
-    env = Environment(FileSystemLoader(str(TEMPLATES_DIR)))
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
     template = env.get_template(f"{template_name}.html")
 
     html = template.render(
