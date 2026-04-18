@@ -11,11 +11,11 @@ SEED_START = date(2025, 1, 1)
 SEED_END = date(2026, 3, 31)
 
 PRODUCTS = [
-    ("SKU-001", "Widget Alpha", 120.00),
-    ("SKU-002", "Widget Beta", 240.00),
-    ("SKU-003", "Gadget Pro", 499.00),
-    ("SKU-004", "Gadget Lite", 199.00),
-    ("SKU-005", "Super Widget", 89.00),
+    ("SKU-001", "Widget Alpha", 32000.00),
+    ("SKU-002", "Widget Beta", 9800.00),
+    ("SKU-003", "Gadget Pro", 12999.00),
+    ("SKU-004", "Gadget Lite", 9999.00),
+    ("SKU-005", "Super Widget", 8999.00),
 ]
 
 def create_schema(conn: sqlite3.Connection) -> None:
