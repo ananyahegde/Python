@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            color: #1a1a1a;
+            padding: 40px;
+        }
+
+
+        /* --- Header --- */
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1a3c6e;
+            padding-bottom: 16px;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #1a3c6e;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header h2 {
+            font-size: 16px;
+            color: #555;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        .header .generated-at {
+            font-size: 11px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+
+        /* --- Summary Table --- */
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a3c6e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            margin-top: 28px;
+            border-left: 4px solid #1a3c6e;
+            padding-left: 8px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+
+        .summary-table td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background-color: #f5f7fa;
+        }
+
+        .summary-table .label {
+            font-weight: bold;
+            color: #444;
+            width: 50%;
+        }
+
+        .summary-table .value {
+            color: #1a1a1a;
+            text-align: right;
+        }
+
+        .positive {
+            color: #2a7a2a;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+
+        /* --- Charts --- */
+        .charts-row {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+            justify-content: space-between;
+        }
+
+        .chart-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .chart-box img {
+            width: 100%;
+            max-width: 480px;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+
+        /* --- Warning Section --- */
+        .warning-section {
+            margin-top: 28px;
+            background-color: #fff8f0;
+            border: 1px solid #e8a87c;
+            border-left: 5px solid #e07b2a;
+            border-radius: 4px;
+            padding: 14px 18px;
+        }
+
+        .warning-section h3 {
+            color: #c0501a;
+            font-size: 13px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .warning-section ul {
+            padding-left: 18px;
+        }
+
+        .warning-section ul li {
+            margin-bottom: 4px;
+            color: #7a3a10;
+        }
+
+
+        /* --- Region Table --- */
+        .region-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        .region-table th {
+            background-color: #1a3c6e;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .region-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .region-table tr:nth-child(even) td {
+            background-color: #f5f7fa;
+        }
+
+        .region-table td.num {
+            text-align: right;
+        }
+
+
+        /* --- Footer --- */
+        .footer {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Monthly Sales Report</h1>
+        <h2>{{ month_label }}</h2>
+        <div class="generated-at">Generated: {{ generated_at }}</div>
+    </div>
+
+    <!-- Summary KPIs -->
+    <div class="section-title">Summary</div>
+    <table class="summary-table">
+        <tr>
+            <td class="label">Total Revenue</td>
+            <td class="value">₹{{ "{:,.0f}".format(summary.total_revenue) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Units Sold</td>
+            <td class="value">{{ "{:,}".format(summary.units_sold) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Total Orders</td>
+            <td class="value">{{ "{:,}".format(summary.order_count) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Avg Order Value</td>
+            <td class="value">₹{{ "{:,.2f}".format(summary.avg_order_value) }}</td>
+        </tr>
+        <tr>
+            <td class="label">MoM Growth</td>
+            <td class="value {% if mom_growth >= 0 %}positive{% else %}negative{% endif %}">
+                {% if mom_growth >= 0 %}+{% endif %}{{ "%.1f"|format(mom_growth) }}%
+            </td>
+        </tr>
+    </table>
+
+    <!-- Region Breakdown Table -->
+    <div class="section-title">Revenue by Region</div>
+    <table class="region-table">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Revenue</th>
+                <th>Units Sold</th>
+                <th>MoM Change</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in region_data %}
+            <tr>
+                <td>{{ r.region }}</td>
+                <td class="num">₹{{ "{:,.0f}".format(r.total_revenue) }}</td>
+                <td class="num">{{ "{:,}".format(r.units_sold) }}</td>
+                <td class="num {% if r.mom_change >= 0 %}positive{% else %}negative{% endif %}">
+                    {% if r.mom_change >= 0 %}+{% endif %}{{ "%.1f"|format(r.mom_change) }}%
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Charts -->
+    <div class="section-title">Charts</div>
+    <div class="charts-row">
+        <div class="chart-box">
+            <img src="data:image/png;base64,{{ bar_chart_b64 }}" alt="Revenue by Region" />
+        </div>
+        <div class="chart-box">
+            <img src="data:image/png;base64,{{ line_chart_b64 }}" alt="Daily Sales Trend" />
+        </div>
+    </div>
+
+    <!-- Conditional Warning Section -->
+    {% if warnings %}
+    <div class="warning-section">
+        <h3>⚠ Attention Required</h3>
+        <ul>
+            {% for w in warnings %}
+            <li>{{ w }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="footer">
+        <span>Confidential — Internal Use Only</span>
+        <span>{{ generated_at }}</span>
+    </div>
+
+</body>
+</html>
