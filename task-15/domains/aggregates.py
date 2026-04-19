@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from domain.events import OrderPlaced, InventoryReserved
+from domains.events import OrderPlaced, InventoryReserved
 
 
 def generate_order_id():

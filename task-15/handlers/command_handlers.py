@@ -1,4 +1,4 @@
-from domain.aggregates import Order
+from domains.aggregates import Order
 
 
 class PlaceOrderCommandHandler:

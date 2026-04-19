@@ -84,5 +84,5 @@ class EventStore:
                 state["status"] = "SHIPPED"
 
         item_count = sum(i["qty"] for i in state["items"])
-        print(f"\nReconstructed state: Order(id={state['id']}, status={stte['status']}, total={state['total']}, items={item_count})")
+        print(f"\nReconstructed state: Order(id={state['id']}, status={state['status']}, total={state['total']}, items={item_count})")
         return state

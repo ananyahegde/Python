@@ -1,5 +1,5 @@
-from domain.commands import PlaceOrderCommand, GetOrderSummary
-from domain.events import OrderPlaced, OrderUpdated, PaymentProcessed, OrderShipped
+from domains.contracts import PlaceOrderCommand, GetOrderSummary
+from domains.events import OrderPlaced, OrderUpdated, PaymentProcessed, OrderShipped
 from infrastructure.event_store import EventStore
 from infrastructure.read_store import ReadStore
 from infrastructure.message_bus import MessageBus

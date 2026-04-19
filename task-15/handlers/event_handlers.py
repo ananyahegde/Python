@@ -1,4 +1,4 @@
-from domain.events import OrderPlaced
+from domains.events import OrderPlaced
 
 
 class OrderDashboardProjection:

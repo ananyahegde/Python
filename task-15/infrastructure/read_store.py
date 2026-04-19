@@ -1,5 +1,5 @@
 import time
-from domain.commands import GetOrderSummary
+from domains.contracts import GetOrderSummary
 
 
 class ReadStore:
